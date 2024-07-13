@@ -1,0 +1,5 @@
+<template>
+  <FilterBar/>
+  <JobList/>
+</template>
+
