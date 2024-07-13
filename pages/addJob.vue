@@ -229,12 +229,14 @@
 import { ref, onMounted } from "vue";
 import { useTempJobStore } from "@/store/tempJobs"; // Upewnij się, że ścieżka jest poprawna
 import { useRouter } from "vue-router";
+import { useUserStore } from '@/store/user';
 
 const router = useRouter();
 const loading = ref(false);
 const isJobCreated = ref(false);
 const jobId = ref(null);
 const error = ref("");
+const userStore = useUserStore();
 
 const TempJob = useTempJobStore();
 
@@ -254,9 +256,10 @@ const newOffer = async () => {
 
 const paddleCheckout = async () => {
   try {
-    let user = JSON.parse(localStorage.getItem("user"));
-    console.log("check...", user, jobId.value);
-    if (user && jobId.value) {
+    // let user = JSON.parse(localStorage.getItem("user"));
+
+    console.log("check...", userStore.$state.user, jobId.value);
+    if (userStore.$state.user && jobId.value) {
       const config = useRuntimeConfig();
       console.log("config ... ", config.public);
       Paddle.Checkout.open({
@@ -267,8 +270,8 @@ const paddleCheckout = async () => {
           },
         ],
         customData: {
-          user_id: user.$id,
-          user_email: user.email,
+          user_id: userStore.$state.user.$id,
+          user_email: userStore.$state.user.email,
           jobId: jobId.value
           // tempJob: TempJob,
         },
